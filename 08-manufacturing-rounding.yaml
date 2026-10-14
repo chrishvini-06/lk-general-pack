@@ -1,0 +1,40 @@
+id: "08"
+title: "Manufacturer, line rounding differs from rounding the total"
+date: 2026-10-06
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: yes
+  sscl_activity: manufacturing
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Batch A
+    amount: "100.00"
+    amount_type: exclusive
+    codes: [SSCL-MFG, VAT-STD]
+  - description: Batch B
+    amount: "300.00"
+    amount_type: exclusive
+    codes: [SSCL-MFG, VAT-STD]
+working: |
+  Line 1: SSCL base = 100.00 x 17/20 = 85.00; SSCL = 85.00 x 2.5% = 2.125, rounded half up = 2.13; VAT = 100.00 x 18% = 18.00
+  Line 2: SSCL base = 300.00 x 17/20 = 255.00; SSCL = 255.00 x 2.5% = 6.375, rounded half up = 6.38; VAT = 300.00 x 18% = 54.00
+  SSCL = 2.13 + 6.38 = 8.51 (rounding the total once would give 8.50; the pack rounds per line)
+  Net = 400.00; VAT = 72.00; total owed = 472.00
+expected:
+  lines:
+    - net: "100.00"
+      taxes: {SSCL-MFG: "2.13", VAT-STD: "18.00"}
+    - net: "300.00"
+      taxes: {SSCL-MFG: "6.38", VAT-STD: "54.00"}
+  total: "472.00"
+  postings:
+    - {account: trade_receivables, debit: "472.00"}
+    - {account: revenue, credit: "400.00"}
+    - {account: output_tax_control, credit: "72.00"}
+    - {account: sscl_expense, debit: "8.51"}
+    - {account: sscl_payable, credit: "8.51"}
+  boxes:
+    VAT-RETURN: {"1": "400.00", "4": "72.00"}
+    SSCL-RETURN: {"1": "400.00", "2": "8.51"}

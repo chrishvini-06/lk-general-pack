@@ -1,0 +1,25 @@
+id: "21"
+title: "Small payment to a non-resident"
+date: 2026-10-09
+document: payment
+answers:
+  registered_vat: no
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: yes
+  wht_deducted_by_customers: no
+settlement:
+  amount: "2500.00"
+  codes: [WHT-NR]
+working: |
+  Withholding = 2500.00 x 14% = 350.00
+  Cash paid = 2500.00 - 350.00 = 2150.00
+expected:
+  taxes: {WHT-NR: "350.00"}
+  total: "2150.00"
+  postings:
+    - {account: trade_payables, debit: "2500.00"}
+    - {account: bank, credit: "2150.00"}
+    - {account: wht_payable, credit: "350.00"}
+  boxes:
+    WHT-RETURN: {"3": "2500.00", "4": "350.00"}

@@ -1,0 +1,47 @@
+id: "12"
+title: "Two small taxable lines, half-cent VAT rounding"
+date: 2026-10-05
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Item 1
+    amount: "12.25"
+    amount_type: exclusive
+    codes: [VAT-STD]
+  - description: Item 2
+    amount: "12.25"
+    amount_type: exclusive
+    codes: [VAT-STD]
+  - description: Export item
+    amount: "100.00"
+    amount_type: exclusive
+    codes: [VAT-ZERO]
+  - description: Outside scope
+    amount: "50.00"
+    amount_type: exclusive
+    codes: [VAT-OOS]
+working: |
+  Lines 1 and 2: VAT = 12.25 x 18% = 2.205, rounded half up = 2.21 each; VAT total = 4.42 (rounding the total once would give 4.41; the pack rounds per line)
+  Net = 12.25 + 12.25 + 100.00 + 50.00 = 174.50; total owed = 174.50 + 4.42 = 178.92
+expected:
+  lines:
+    - net: "12.25"
+      taxes: {VAT-STD: "2.21"}
+    - net: "12.25"
+      taxes: {VAT-STD: "2.21"}
+    - net: "100.00"
+      taxes: {VAT-ZERO: "0.00"}
+    - net: "50.00"
+      taxes: {VAT-OOS: "0.00"}
+  total: "178.92"
+  postings:
+    - {account: trade_receivables, debit: "178.92"}
+    - {account: revenue, credit: "174.50"}
+    - {account: output_tax_control, credit: "4.42"}
+  boxes:
+    VAT-RETURN: {"1": "24.50", "2": "100.00", "4": "4.42"}

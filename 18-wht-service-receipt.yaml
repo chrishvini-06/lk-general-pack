@@ -1,0 +1,25 @@
+id: "18"
+title: "Receipt where the customer withholds tax on service fees"
+date: 2026-10-05
+document: receipt
+answers:
+  registered_vat: no
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: yes
+settlement:
+  amount: "300000.00"
+  codes: [WHT-SVC]
+working: |
+  Customer withholds 300000.00 x 5% = 15000.00
+  Cash received = 300000.00 - 15000.00 = 285000.00; the invoice is cleared for the full 300000.00
+expected:
+  taxes: {WHT-SVC: "15000.00"}
+  total: "285000.00"
+  postings:
+    - {account: bank, debit: "285000.00"}
+    - {account: wht_receivable, debit: "15000.00"}
+    - {account: trade_receivables, credit: "300000.00"}
+  boxes:
+    WHT-RETURN: {"5": "15000.00"}

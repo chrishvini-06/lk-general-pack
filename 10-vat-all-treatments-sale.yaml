@@ -1,0 +1,49 @@
+id: "10"
+title: "Sale invoice with standard, zero-rated, exempt and out-of-scope lines"
+date: 2026-09-10
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Taxable goods
+    amount: "40000.00"
+    amount_type: exclusive
+    codes: [VAT-STD]
+  - description: Export goods
+    amount: "25000.00"
+    amount_type: exclusive
+    codes: [VAT-ZERO]
+  - description: Exempt supply
+    amount: "10000.00"
+    amount_type: exclusive
+    codes: [VAT-EXEMPT]
+  - description: Outside scope
+    amount: "5000.00"
+    amount_type: exclusive
+    codes: [VAT-OOS]
+working: |
+  Line 1: VAT = 40000.00 x 18% = 7200.00
+  Lines 2 to 4: zero-rated, exempt and out-of-scope carry no tax
+  Net = 40000.00 + 25000.00 + 10000.00 + 5000.00 = 80000.00; total owed = 80000.00 + 7200.00 = 87200.00
+  Out-of-scope is not reported on the VAT return summary
+expected:
+  lines:
+    - net: "40000.00"
+      taxes: {VAT-STD: "7200.00"}
+    - net: "25000.00"
+      taxes: {VAT-ZERO: "0.00"}
+    - net: "10000.00"
+      taxes: {VAT-EXEMPT: "0.00"}
+    - net: "5000.00"
+      taxes: {VAT-OOS: "0.00"}
+  total: "87200.00"
+  postings:
+    - {account: trade_receivables, debit: "87200.00"}
+    - {account: revenue, credit: "80000.00"}
+    - {account: output_tax_control, credit: "7200.00"}
+  boxes:
+    VAT-RETURN: {"1": "40000.00", "2": "25000.00", "3": "10000.00", "4": "7200.00"}

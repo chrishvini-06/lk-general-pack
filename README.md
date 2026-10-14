@@ -1,103 +1,35 @@
-# Accountants Toolkit
+# Sri Lanka general statutory pack (draft 0.1.0)
 
-Author and check **statutory packs** for GoLejjer.
+Jurisdiction LK, currency LKR, scope general. Status: **draft, not reviewed, not released.**
 
-A statutory pack is a jurisdiction's tax rules (VAT or GST, turnover levies, withholding taxes) written as structured data, worked examples and plain-language guidance. GoLejjer computes every tax figure from the pack's rule data; the client's AI assistant reads the pack's guidance to know what to ask and which code to choose.
+## What it covers
+VAT, the Social Security Contribution Levy (SSCL) and withholding tax on service fees. Rates, thresholds and dates are in `rules.yaml`, each with its source. Twenty-one worked examples are in `examples/`. Guidance for business owners' assistants is in `guidance/GUIDANCE.md`. Rules the schema cannot express are in `capability-requests.md`.
 
-Packs are written and owned by accountants, not by GoLejjer. GoLejjer checks that a pack is well-formed and that its worked examples reproduce exactly; it never reviews or endorses the tax content. Every pack a client uses is labelled with its author and the date it was last updated.
+## What it does not cover
+Income tax, payroll taxes, customs, e-invoicing, VAT on financial services, withholding on rent, interest and dividends, SSCL on imports, registered distributors, and partial input-tax recovery.
 
-## If you are an accountant
+## Open items for the author before release
+1. **Fill in the author block** in `pack.yaml` (name, credential, membership number). No one is named yet.
+2. **Read the original documents** for every source marked "read via secondary summary" below. Nothing in this draft replaces that step.
+3. **Map the return boxes** to the real IRD return layouts. The box numbers here are plain groupings for the pack, not IRD form field numbers.
+4. **Decide on due dates** (see CR-2). VAT carries the payment date, not the return date.
+5. **Run the checker** on GitHub or locally. This draft was verified with a separate recomputation script that reads `rules.yaml`, but the toolkit's own checker has not been run, and a few layout choices were inferred (see below).
 
-Paste this page's link into your AI assistant and say:
+## Source status
 
-> Help me author a statutory pack for my country using this toolkit.
+| Rule | Source | How it was read |
+|---|---|---|
+| VAT rates, thresholds, due dates | IRD VAT page (updated 19 Nov 2025) | Read directly |
+| SSCL rate, percentages, due dates | IRD SSCL page (updated 27 Jan 2026) | Read directly |
+| SSCL threshold cut to LKR 36M a year (LKR 9M a quarter) from 1 Jul 2026 | SSCL (Amendment) Act No. 10 of 2026; IRD Notice PN/SSCL/2026-04/1 | Secondary summary (Lanka Tax Club). The IRD page above still shows the older threshold |
+| SSCL exemption for financial services at 20.5% VAT | SSCL (Amendment) Act No. 24 of 2025; IRD notice SEC/PN/SSCL/2026-01 | Secondary summary |
+| VAT Amendment Act No. 14 of 2026 (threshold unchanged, 20.5% on financial services from 1 Jul 2026) | IRD notice SEC/PN/VAT/2026-03 | Secondary summaries (KPMG and others); the Act is listed on the IRD VAT page |
+| Withholding rates (5% and 14%), scope, due date | Inland Revenue (Amendment) Act No. 11 of 2026; IRD Circular SEC/2026/E/04 | Secondary summaries (Lanka Tax Club, Bloomberg Tax). The exact 2026 scope for the 5% rate was not read |
 
-Your assistant does the rest: it reads the instructions below, asks you what the pack should cover, helps you create your own copy of this repository, drafts every file with you, and tells you when the pack passes. You need a free GitHub account and your professional knowledge. No software to install, no command line.
+## Layout choices inferred, not confirmed
+- The toolkit's sample pack (Examplia) and writing-guidance file could not be opened in this session. The layout of the expected values for receipts and payments (`expected.taxes`) and the account keys used in postings follow `format.md` and `worked-examples.md` but were not compared with a sample.
+- `day_of_following_month` is used for due dates.
+- The SSCL codes use `treatment: standard` with the levy's liable percentage as a `fraction`.
 
-## If you are an AI assistant
-
-You are helping a qualified accountant (the **author**) write a statutory pack. The author is the expert on the law; you research, structure, calculate by hand and check. Follow these steps in order, confirming each with the author.
-
-### 1. Read the skill first
-
-Read these files, in this order, before asking the author anything:
-
-1. `skill/statutory-pack-authoring/SKILL.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/SKILL.md)): the authoring procedure and the rules you must always follow.
-2. `skill/statutory-pack-authoring/references/format.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/references/format.md)): the pack format, field by field.
-3. `skill/statutory-pack-authoring/references/capabilities.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/references/capabilities.md)): what the tax engine can compute, and how to raise a capability request for anything it cannot.
-4. `skill/statutory-pack-authoring/references/worked-examples.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/references/worked-examples.md)) and `writing-guidance.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/references/writing-guidance.md)): how to write the examples and the guidance.
-5. `examples/examplia/` ([rules](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/examples/examplia/rules.yaml), [one example](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/examples/examplia/examples/01-service-sale.yaml), [guidance](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/examples/examplia/guidance/GUIDANCE.md)): a complete pack for a fictional country. Every figure in it is invented; use it only to see the shape.
-
-If you can install skills (for example Claude with code execution on), you may instead upload `statutory-pack-authoring.zip` from this repository's Releases page and activate it. Reading the files directly works just as well.
-
-### 2. Agree the scope with the author
-
-Ask, and write the answers down:
-
-- **Jurisdiction** (ISO country code) and **currency**.
-- **Which taxes.** A first pack should cover the jurisdiction's main **indirect tax** (VAT or GST), any **turnover-based levy**, and **withholding tax** on payments for services. Leave income tax, payroll taxes, customs and e-invoicing for a later release.
-- **Scope:** general (all sectors, with a sector question where rules differ) is the default; a single-sector pack is fine if that is the author's practice.
-- **From when:** rules in force from the start of the current tax year, plus any change already enacted. Announced but unenacted changes go under `pending_changes`.
-
-### 3. Create the author's own repository
-
-The pack lives in the author's repository, created from this template. All of this is on the GitHub website; the author needs a free account.
-
-1. Open this repository and click the green **Use this template**, then **Create a new repository**.
-2. Owner: the author's account. Name: `<country code>-general-pack` (for example `xx-general-pack`). **Public** is recommended, so clients can see the pack is maintained. Create it.
-3. The new repository contains an empty `pack/` folder, the checker, and a workflow that runs the checker on every save.
-
-If you can operate a browser, do these clicks for the author and show them the result. If you cannot, read `skill/statutory-pack-authoring/references/github-for-authors.md` ([raw](https://raw.githubusercontent.com/golejjer/accountants-toolkit/main/skill/statutory-pack-authoring/references/github-for-authors.md)) and walk the author through it one click at a time.
-
-### 4. Write the pack, one file at a time
-
-Work through `SKILL.md` steps 2 to 8: research each rule in its official source, then draft `pack/pack.yaml`, `pack/rules.yaml`, the worked examples in `pack/examples/`, `pack/guidance/GUIDANCE.md`, `pack/CHANGELOG.md` and `pack/README.md`.
-
-For each file: show the author the complete content, get their confirmation, then have them open the file in their repository (pencil icon), replace the contents, and **Commit changes** directly to main. Or do it for them if you can operate a browser.
-
-After every save, GitHub runs the checker. A **green tick** on the latest commit means the pack passes; a **red cross** means it does not. Ask the author to click the cross and paste you the output, fix the file, and save again. The checker recomputes every worked example from the rules, so a mismatch means either the rules or the hand calculation is wrong: work out which, and never change an expected answer only to make the check pass.
-
-Rules that cannot be expressed with the capabilities in `capabilities.md` go in `pack/capability-requests.md`, with the legal source and a worked example. Do not approximate them.
-
-### 5. Publish a release
-
-When the latest commit has a green tick and the author has confirmed every worked example:
-
-1. Set `version` in `pack/pack.yaml` (first release `0.1.0`) and add the `pack/CHANGELOG.md` entry.
-2. On the repository page: **Releases**, **Draft a new release**, tag `v0.1.0`, title `v0.1.0`, description copied from the change log, **Publish release**.
-
-### 6. Finish
-
-Give the author this to send to whoever asked for the pack:
-
-- the repository link and the release tag;
-- `pack/capability-requests.md`, if any;
-- a short note: time spent, what was unclear in this toolkit, where you (the assistant) helped and where you got things wrong, and any rule the author is unsure about.
-
-GoLejjer registers the pack by its repository link and tag, runs its own checks, and keeps its own copy of that version. The author attaches the pack to a client's books only after the client invites them as Accountant. When the law changes, the author publishes a new release and every attached client moves to it from its effective date.
-
-## What is here
-
-| Folder | What it is |
-|---|---|
-| `skill/statutory-pack-authoring/` | The [Agent Skill](https://agentskills.io): procedure, format, capabilities, example rules, guidance rules, GitHub guide, and the checker |
-| `checker/validate.py` | Runs the checker on a pack folder: `python checker/validate.py pack` (Python 3 and PyYAML) |
-| `pack/` | The empty pack the author fills in after "Use this template" |
-| `examples/examplia/` | A complete pack for a fictional country; every rate is invented |
-| `.github/workflows/check.yml` | Runs the checker on every save and shows a tick or a cross |
-
-## Rules of the road
-
-- Every rate, threshold and due date cites an official source with its date.
-- Worked examples are computed by hand; the checker is a second opinion, never the authority.
-- Rules the format cannot express are raised as capability requests, never approximated.
-- No client data in a pack. No compliance claims ("compliant", "guaranteed", "approved", "official").
-- Use an AI assistant only on a plan whose provider does not train on your content.
-
-## Feedback
-
-Open an issue here: **Capability request** for a rule the format cannot express; **Kit problem** for anything unclear or wrong.
-
-## Licence
-
-Apache 2.0 (see `LICENSE`). Authors own the packs they write. The example pack is fictional and carries no real jurisdiction's rules.
+## Examples
+Each of the ten tax codes has at least three examples. Rounding edge cases, VAT-inclusive entries and the change from 15% to 18% (31 Dec 2023 and 1 Jan 2024) are covered. The pack has no compound taxes, so there is no compound example. All figures were worked out by hand and match the separate recomputation.

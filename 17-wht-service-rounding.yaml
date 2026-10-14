@@ -1,0 +1,25 @@
+id: "17"
+title: "Payment of service fees, half-cent rounding"
+date: 2026-10-02
+document: payment
+answers:
+  registered_vat: no
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: yes
+  wht_deducted_by_customers: no
+settlement:
+  amount: "12345.50"
+  codes: [WHT-SVC]
+working: |
+  Withholding = 12345.50 x 5% = 617.275, rounded half up = 617.28
+  Cash paid = 12345.50 - 617.28 = 11728.22
+expected:
+  taxes: {WHT-SVC: "617.28"}
+  total: "11728.22"
+  postings:
+    - {account: trade_payables, debit: "12345.50"}
+    - {account: bank, credit: "11728.22"}
+    - {account: wht_payable, credit: "617.28"}
+  boxes:
+    WHT-RETURN: {"1": "12345.50", "2": "617.28"}

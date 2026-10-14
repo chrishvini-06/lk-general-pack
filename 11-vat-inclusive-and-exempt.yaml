@@ -1,0 +1,36 @@
+id: "11"
+title: "Sale with a VAT-inclusive line and an exempt line"
+date: 2026-10-02
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Taxable goods
+    amount: "11800.00"
+    amount_type: inclusive
+    codes: [VAT-STD]
+  - description: Exempt supply
+    amount: "4000.00"
+    amount_type: exclusive
+    codes: [VAT-EXEMPT]
+working: |
+  Line 1: net before rounding = 11800.00 / 1.18 = 10000.00; VAT = 10000.00 x 18% = 1800.00; net after rounding = 11800.00 - 1800.00 = 10000.00
+  Line 2: exempt, no tax
+  Net = 10000.00 + 4000.00 = 14000.00; total owed = 14000.00 + 1800.00 = 15800.00
+expected:
+  lines:
+    - net: "10000.00"
+      taxes: {VAT-STD: "1800.00"}
+    - net: "4000.00"
+      taxes: {VAT-EXEMPT: "0.00"}
+  total: "15800.00"
+  postings:
+    - {account: trade_receivables, debit: "15800.00"}
+    - {account: revenue, credit: "14000.00"}
+    - {account: output_tax_control, credit: "1800.00"}
+  boxes:
+    VAT-RETURN: {"1": "10000.00", "3": "4000.00", "4": "1800.00"}

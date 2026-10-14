@@ -1,0 +1,42 @@
+id: "13"
+title: "Purchase bill with recoverable VAT, an exempt line and an out-of-scope line"
+date: 2026-09-10
+document: purchase_bill
+answers:
+  registered_vat: yes
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Taxable supplies
+    amount: "50000.00"
+    amount_type: exclusive
+    codes: [VAT-STD]
+  - description: Exempt supplies
+    amount: "8000.00"
+    amount_type: exclusive
+    codes: [VAT-EXEMPT]
+  - description: Outside scope
+    amount: "2000.00"
+    amount_type: exclusive
+    codes: [VAT-OOS]
+working: |
+  Line 1: VAT = 50000.00 x 18% = 9000.00, recoverable, so it goes to input tax and not to the expense
+  Lines 2 and 3: no tax
+  Expense = 50000.00 + 8000.00 + 2000.00 = 60000.00; amount owed to supplier = 60000.00 + 9000.00 = 69000.00
+expected:
+  lines:
+    - net: "50000.00"
+      taxes: {VAT-STD: "9000.00"}
+    - net: "8000.00"
+      taxes: {VAT-EXEMPT: "0.00"}
+    - net: "2000.00"
+      taxes: {VAT-OOS: "0.00"}
+  total: "69000.00"
+  postings:
+    - {account: expense, debit: "60000.00"}
+    - {account: input_tax_control, debit: "9000.00"}
+    - {account: trade_payables, credit: "69000.00"}
+  boxes:
+    VAT-RETURN: {"5": "50000.00", "6": "9000.00", "7": "8000.00"}

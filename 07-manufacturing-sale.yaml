@@ -1,0 +1,33 @@
+id: "07"
+title: "Manufacturer invoice with SSCL and VAT"
+date: 2026-09-25
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: yes
+  sscl_activity: manufacturing
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Finished goods
+    amount: "200000.00"
+    amount_type: exclusive
+    codes: [SSCL-MFG, VAT-STD]
+working: |
+  SSCL base = 200000.00 x 17/20 (85%) = 170000.00; SSCL = 170000.00 x 2.5% = 4250.00
+  VAT = 200000.00 x 18% = 36000.00
+  Total owed by customer = 200000.00 + 36000.00 = 236000.00
+expected:
+  lines:
+    - net: "200000.00"
+      taxes: {SSCL-MFG: "4250.00", VAT-STD: "36000.00"}
+  total: "236000.00"
+  postings:
+    - {account: trade_receivables, debit: "236000.00"}
+    - {account: revenue, credit: "200000.00"}
+    - {account: output_tax_control, credit: "36000.00"}
+    - {account: sscl_expense, debit: "4250.00"}
+    - {account: sscl_payable, credit: "4250.00"}
+  boxes:
+    VAT-RETURN: {"1": "200000.00", "4": "36000.00"}
+    SSCL-RETURN: {"1": "200000.00", "2": "4250.00"}

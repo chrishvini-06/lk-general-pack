@@ -1,0 +1,33 @@
+id: "03"
+title: "Services invoice entered VAT-inclusive"
+date: 2026-10-01
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: yes
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Monthly retainer
+    amount: "59000.00"
+    amount_type: inclusive
+    codes: [SSCL-SVC, VAT-STD]
+working: |
+  Inclusive amount 59000.00 covers VAT only (SSCL is not added to the invoice): net before rounding = 59000.00 / 1.18 = 50000.00
+  VAT = 50000.00 x 18% = 9000.00; SSCL = 50000.00 x 2.5% = 1250.00
+  Net after rounding = 59000.00 - 9000.00 = 50000.00; total = 59000.00
+expected:
+  lines:
+    - net: "50000.00"
+      taxes: {SSCL-SVC: "1250.00", VAT-STD: "9000.00"}
+  total: "59000.00"
+  postings:
+    - {account: trade_receivables, debit: "59000.00"}
+    - {account: revenue, credit: "50000.00"}
+    - {account: output_tax_control, credit: "9000.00"}
+    - {account: sscl_expense, debit: "1250.00"}
+    - {account: sscl_payable, credit: "1250.00"}
+  boxes:
+    VAT-RETURN: {"1": "50000.00", "4": "9000.00"}
+    SSCL-RETURN: {"1": "50000.00", "2": "1250.00"}

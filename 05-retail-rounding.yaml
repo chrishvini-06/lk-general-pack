@@ -1,0 +1,40 @@
+id: "05"
+title: "Retail business, half-cent SSCL and VAT rounding"
+date: 2026-09-27
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: yes
+  sscl_activity: retail_wholesale
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Goods, domestic
+    amount: "1000.40"
+    amount_type: exclusive
+    codes: [SSCL-RW, VAT-STD]
+  - description: Goods, exported
+    amount: "200.00"
+    amount_type: exclusive
+    codes: [SSCL-EXEMPT, VAT-ZERO]
+working: |
+  Line 1: SSCL base = 1000.40 x 1/2 = 500.20; SSCL = 500.20 x 2.5% = 12.505, rounded half up = 12.51
+  Line 1: VAT = 1000.40 x 18% = 180.072, rounded = 180.07
+  Line 2: exported article, no tax
+  Net = 1000.40 + 200.00 = 1200.40; total owed = 1200.40 + 180.07 = 1380.47
+expected:
+  lines:
+    - net: "1000.40"
+      taxes: {SSCL-RW: "12.51", VAT-STD: "180.07"}
+    - net: "200.00"
+      taxes: {SSCL-EXEMPT: "0.00", VAT-ZERO: "0.00"}
+  total: "1380.47"
+  postings:
+    - {account: trade_receivables, debit: "1380.47"}
+    - {account: revenue, credit: "1200.40"}
+    - {account: output_tax_control, credit: "180.07"}
+    - {account: sscl_expense, debit: "12.51"}
+    - {account: sscl_payable, credit: "12.51"}
+  boxes:
+    VAT-RETURN: {"1": "1000.40", "2": "200.00", "4": "180.07"}
+    SSCL-RETURN: {"1": "1000.40", "2": "12.51", "3": "200.00"}

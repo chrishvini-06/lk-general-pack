@@ -1,0 +1,29 @@
+id: "15"
+title: "Sale on 1 Jan 2024, the first day of the 18% rate"
+date: 2024-01-01
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: no
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Taxable goods
+    amount: "100000.00"
+    amount_type: exclusive
+    codes: [VAT-STD]
+working: |
+  Rate in force on 2024-01-01 = 18%; VAT = 100000.00 x 18% = 18000.00
+  Total owed = 100000.00 + 18000.00 = 118000.00
+expected:
+  lines:
+    - net: "100000.00"
+      taxes: {VAT-STD: "18000.00"}
+  total: "118000.00"
+  postings:
+    - {account: trade_receivables, debit: "118000.00"}
+    - {account: revenue, credit: "100000.00"}
+    - {account: output_tax_control, credit: "18000.00"}
+  boxes:
+    VAT-RETURN: {"1": "100000.00", "4": "18000.00"}

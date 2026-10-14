@@ -1,0 +1,40 @@
+id: "02"
+title: "Services invoice, half-cent rounding on two lines"
+date: 2026-09-22
+document: sale_invoice
+answers:
+  registered_vat: yes
+  sscl_registered: yes
+  sscl_activity: services
+  wht_agent: no
+  wht_deducted_by_customers: no
+lines:
+  - description: Advisory hours
+    amount: "100.20"
+    amount_type: exclusive
+    codes: [SSCL-SVC, VAT-STD]
+  - description: Report fee
+    amount: "33.30"
+    amount_type: exclusive
+    codes: [SSCL-SVC, VAT-STD]
+working: |
+  Line 1: SSCL = 100.20 x 2.5% = 2.505, rounded half up = 2.51; VAT = 100.20 x 18% = 18.036, rounded = 18.04
+  Line 2: SSCL = 33.30 x 2.5% = 0.8325, rounded = 0.83; VAT = 33.30 x 18% = 5.994, rounded = 5.99
+  Net = 100.20 + 33.30 = 133.50; VAT = 18.04 + 5.99 = 24.03; SSCL = 2.51 + 0.83 = 3.34
+  Total owed by customer = 133.50 + 24.03 = 157.53
+expected:
+  lines:
+    - net: "100.20"
+      taxes: {SSCL-SVC: "2.51", VAT-STD: "18.04"}
+    - net: "33.30"
+      taxes: {SSCL-SVC: "0.83", VAT-STD: "5.99"}
+  total: "157.53"
+  postings:
+    - {account: trade_receivables, debit: "157.53"}
+    - {account: revenue, credit: "133.50"}
+    - {account: output_tax_control, credit: "24.03"}
+    - {account: sscl_expense, debit: "3.34"}
+    - {account: sscl_payable, credit: "3.34"}
+  boxes:
+    VAT-RETURN: {"1": "133.50", "4": "24.03"}
+    SSCL-RETURN: {"1": "133.50", "2": "3.34"}
