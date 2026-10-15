@@ -1,16 +1,16 @@
 schema_version: "0.1"
 pack:
-  id: <jurisdiction>-<scope>          # e.g. xx-general; lowercase and hyphens
-  title: <Jurisdiction> <scope> statutory pack
-  jurisdiction: XX                    # ISO 3166-1 alpha-2
-  scope: general                      # or a sector name
-  currency: XXX                       # ISO 4217
+  id: lk-general
+  title: Sri Lanka general statutory pack (VAT, SSCL, withholding tax on service fees)
+  jurisdiction: LK
+  scope: general
+  currency: LKR
   version: 0.1.0
-  level: private                      # private | shared | verified
+  level: private
   status: draft
   authors:
-    - name: <Full name>
-      credential: <Professional body and membership grade>
-      member_no: "<number>"
+    - name: "TO BE COMPLETED: qualified accountant who owns this pack"
+      credential: "TO BE COMPLETED: e.g. membership of CA Sri Lanka"
+      member_no: "TO BE COMPLETED"
   reviewers: []
   last_reviewed: null
