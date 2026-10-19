@@ -1,4 +1,6 @@
 # Change log
+## 0.1.3
+Added pack.level (private) so the pack passes the current toolkit checker. No change to the rules, rates or worked examples.
 ## 0.1.2
 Updated to Toolkit checker 1.1. Added author details and removed retired fields from pack.yaml. No change to the rules, rates or worked examples.
 ## 0.1.0 (draft, not released)
