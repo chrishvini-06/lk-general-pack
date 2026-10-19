@@ -1,6 +1,6 @@
 # Change log
 
-## 0.1.0 (draft, not released)
+## 0.1.2 (draft, not released)
 
 First draft of the Sri Lanka general statutory pack, prepared with an AI assistant for review by the named author.
 
