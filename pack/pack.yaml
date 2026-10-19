@@ -1,4 +1,4 @@
-schema_version: "0.1"
+schema_version: "0.1.2"
 pack:
   id: lk-general
   title: Sri Lanka general statutory pack (VAT, SSCL, withholding tax on service fees)
