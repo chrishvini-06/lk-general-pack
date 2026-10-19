@@ -1,5 +1,6 @@
 # Change log
 ## 0.1.2
+Updated to Toolkit checker 1.1. Added author details and removed retired fields from pack.yaml. No change to the rules, rates or worked examples.
 ## 0.1.0 (draft, not released)
 
 First draft of the Sri Lanka general statutory pack, prepared with an AI assistant for review by the named author.
