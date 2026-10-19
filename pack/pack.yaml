@@ -6,11 +6,7 @@ pack:
   scope: general
   currency: LKR
   version: 0.1.0
-  level: private
-  status: draft
   authors:
-    - name: "TO BE COMPLETED: qualified accountant who owns this pack"
-      credential: "TO BE COMPLETED: e.g. membership of CA Sri Lanka"
-      member_no: "TO BE COMPLETED"
-  reviewers: []
-  last_reviewed: null
+    - name: Chrishvini Rogers
+      credential: NA
+      member_no: NA
