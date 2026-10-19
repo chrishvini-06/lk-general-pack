@@ -1,4 +1,4 @@
-# Sri Lanka general statutory pack (draft 0.1.0)
+# Sri Lanka general statutory pack (draft 0.1.2)
 
 Jurisdiction LK, currency LKR, scope general. Status: **draft, not reviewed, not released.**
 
