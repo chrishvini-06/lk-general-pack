@@ -1,6 +1,6 @@
 # Sri Lanka general statutory pack (draft 0.1.2)
 
-Jurisdiction LK, currency LKR, scope general. Status: **draft, not reviewed, not released.**
+Jurisdiction LK, currency LKR, scope general. Status: **draft for review.** Author: Chrishvini Rogers (ACCA student). Not yet reviewed by a qualified accountant.
 
 ## What it covers
 VAT, the Social Security Contribution Levy (SSCL) and withholding tax on service fees. Rates, thresholds and dates are in `rules.yaml`, each with its source. Twenty-one worked examples are in `examples/`. Guidance for business owners' assistants is in `guidance/GUIDANCE.md`. Rules the schema cannot express are in `capability-requests.md`.
@@ -8,12 +8,11 @@ VAT, the Social Security Contribution Levy (SSCL) and withholding tax on service
 ## What it does not cover
 Income tax, payroll taxes, customs, e-invoicing, VAT on financial services, withholding on rent, interest and dividends, SSCL on imports, registered distributors, and partial input-tax recovery.
 
-## Open items for the author before release
-1. **Fill in the author block** in `pack.yaml` (name, credential, membership number). No one is named yet.
-2. **Read the original documents** for every source marked "read via secondary summary" below. Nothing in this draft replaces that step.
-3. **Map the return boxes** to the real IRD return layouts. The box numbers here are plain groupings for the pack, not IRD form field numbers.
-4. **Decide on due dates** (see CR-2). VAT carries the payment date, not the return date.
-5. **Run the checker** on GitHub or locally. This draft was verified with a separate recomputation script that reads `rules.yaml`, but the toolkit's own checker has not been run, and a few layout choices were inferred (see below).
+## Open items for the author before release 
+1. **Read the original documents** for every source marked "read via secondary summary" below. Nothing in this draft replaces that step.
+2. **Map the return boxes** to the real IRD return layouts. The box numbers here are plain groupings for the pack, not IRD form field numbers.
+3. **Decide on due dates** (see CR-2). VAT carries the payment date, not the return date.
+   
 
 ## Source status
 
