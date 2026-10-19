@@ -1,11 +1,11 @@
-schema_version: "0.1.2"
+schema_version: "0.1"
 pack:
   id: lk-general
   title: Sri Lanka general statutory pack (VAT, SSCL, withholding tax on service fees)
   jurisdiction: LK
   scope: general
   currency: LKR
-  version: 0.1.0
+  version: 0.1.2
   authors:
     - name: Chrishvini Rogers
       credential: ACCA, student 
